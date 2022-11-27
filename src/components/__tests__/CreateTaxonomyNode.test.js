@@ -9,7 +9,7 @@ import React from 'react';
 describe("CreateTaxonomyNode component", () => {
     it("should render selects for each type correctly", () => {
         const testProps = {
-            valuesByType: {"type1": [{name: "value1"}, {name:"value2"}], "type2": [{name: "value3"}]},
+            valuesByType: {"type1": ["value1","value2"], "type2": ["value3"]},
             addNodeToTaxonomy: jest.fn()
         }
 
@@ -44,7 +44,7 @@ describe("CreateTaxonomyNode component", () => {
     it("should add new node to taxonomy on hitting 'Create Taxonomy Node' button", async () => {
         const addNodeToTaxonomyMock = jest.fn();
         const testProps = {
-            valuesByType: {"type1": [{name: "value1"}, {name:"value2"}], "type2": [{name: "value3"}]},
+            valuesByType: {"type1": ["value1","value2"], "type2": ["value3"]},
             addNodeToTaxonomy: addNodeToTaxonomyMock
         }
 

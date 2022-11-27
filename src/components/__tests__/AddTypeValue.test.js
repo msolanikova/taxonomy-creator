@@ -45,7 +45,7 @@ describe("AddTypeValue component", () => {
         fireEvent.click(screen.queryAllByRole("button")[1]);
 
         expect(addTypeValueMock).toHaveBeenCalledTimes(1);
-        expect(addTypeValueMock.mock.calls[0][0]).toEqual({name: "typevalue2", type: "type2"});
+        expect(addTypeValueMock.mock.calls[0][0]).toEqual("typevalue2");
         expect(addTypeValueMock.mock.calls[0][1]).toBe("type2");
     });
 });

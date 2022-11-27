@@ -5,10 +5,10 @@ import Button from "@mui/material/Button";
 const CreateTaxonomyNode = ({valuesByType, addNodeToTaxonomy}) => {
     const [taxoNode, setTaxoNode] = useState({});
 
-    const renderItemsForType = (nodes, type) => {
-        const nodesCopy = [{name: ""}, ...nodes];
-        const items = nodesCopy.map(node => (
-            <option key={node.name ? node.name : `${type}-null`} value={node.name}>{node.name}</option>
+    const renderItemsForType = (values, type) => {
+        const valuesCopy = ["", ...values];
+        const items = valuesCopy.map(value => (
+            <option key={value ? value : `${type}-null`} value={value}>{value}</option>
         ));
         return items;
     }
@@ -25,8 +25,8 @@ const CreateTaxonomyNode = ({valuesByType, addNodeToTaxonomy}) => {
 
     const renderSelectsForTypes = (valuesByType) => {
         return Object.keys(valuesByType).map(type => {
-            const nodes = valuesByType[type];
-            const items = renderItemsForType(nodes, type);
+            const values = valuesByType[type];
+            const items = renderItemsForType(values, type);
             return (
                 <div key={type}>
                     <InputLabel id="demo-simple-select-label">{type}</InputLabel>

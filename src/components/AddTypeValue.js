@@ -12,7 +12,7 @@ function AddTypeValue({types, addTypeValue}) {
     }
 
     const handleClick = (type) => {
-        addTypeValue({name: newNodes[type], type}, type);
+        addTypeValue(newNodes[type], type);
         changeNewNodes(type, "");
     }
 
