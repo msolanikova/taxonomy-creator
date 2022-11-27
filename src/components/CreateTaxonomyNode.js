@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {InputLabel, MenuItem, Select} from "@mui/material";
+import {InputLabel, Select} from "@mui/material";
 import Button from "@mui/material/Button";
 
 const CreateTaxonomyNode = ({valuesByType, addNodeToTaxonomy}) => {
@@ -8,7 +8,6 @@ const CreateTaxonomyNode = ({valuesByType, addNodeToTaxonomy}) => {
     const renderItemsForType = (nodes, type) => {
         const nodesCopy = [{name: ""}, ...nodes];
         const items = nodesCopy.map(node => (
-            // <MenuItem key={node.name} value={node.name}>{node.name}</MenuItem>
             <option key={node.name ? node.name : `${type}-null`} value={node.name}>{node.name}</option>
         ));
         return items;
