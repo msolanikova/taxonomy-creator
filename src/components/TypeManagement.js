@@ -10,6 +10,10 @@ const TypeManagement = ({types, addType}) => {
         setNewType("");
     }
 
+    const handleClick = () => {
+        addNewType();
+    }
+
     const handleTextInput = (event) => {
         setNewType(event.target.value);
     }
@@ -21,9 +25,8 @@ const TypeManagement = ({types, addType}) => {
 
     return (
         <div>
-            <TextField variant="outlined" label="Type" id="type" value={newType} onChange={handleTextInput}
-                       onKeyDown={handleEnter}/>
-            <Button variant="contained" onClick={addNewType}>Add type</Button>
+            <TextField variant="outlined" label="Type" id="type" value={newType} onChange={handleTextInput} onKeyDown={handleEnter} />
+            <Button variant="contained" onClick={handleClick}>Add type</Button>
             <h2>Types</h2>
             <List dense={true}>
                 {types.map((type, index) => (

@@ -41,19 +41,19 @@ function getTypesFromTaxonomy(taxonomyNodes, types = []) {
     return types;
 }
 
-function getNodesByTypeFromTaxonomy(taxonomyNodes, nodesByType = {}) {
+function getValuesByTypeFromTaxonomy(taxonomyNodes, valuesByType = {}) {
     for(let node of taxonomyNodes) {
-        if(!nodesByType[node.type]) {
-            nodesByType[node.type] = [];
+        if(!valuesByType[node.type]) {
+            valuesByType[node.type] = [];
         }
         const nodeCopy = {...node};
         delete nodeCopy.children;
-        nodesByType[node.type].push(nodeCopy);
+        valuesByType[node.type].push(nodeCopy);
 
-        nodesByType = getNodesByTypeFromTaxonomy(node.children, nodesByType);
+        valuesByType = getValuesByTypeFromTaxonomy(node.children, valuesByType);
     }
 
-    return nodesByType;
+    return valuesByType;
 }
 
 function _createNodePath(node, types) {
@@ -99,5 +99,5 @@ module.exports = {
     addNodeToTaxonomy: addNodeToTaxonomy,
     getAllPaths: getAllPaths,
     getTypesFromTaxonomy: getTypesFromTaxonomy,
-    getNodesByTypeFromTaxonomy: getNodesByTypeFromTaxonomy
+    getValuesByTypeFromTaxonomy: getValuesByTypeFromTaxonomy
 }

@@ -1,7 +1,7 @@
 import './App.css';
-import TypeManagement from "./TypeManagement";
+import TypeManagement from "./components/TypeManagement";
 import {useEffect, useState} from "react";
-import AddTaxonomyNode from "./components/AddTaxonomyNode";
+import AddTypeValue from "./components/AddTypeValue";
 import CreateTaxonomyNode from "./components/CreateTaxonomyNode";
 import taxonomyService from "./services/taxonomy.service";
 import DisplayTaxonomy from "./components/DisplayTaxonomy";
@@ -9,20 +9,20 @@ import ImportTaxonomy from "./components/ImportTaxonomy";
 
 function App() {
     const [types, setTypes] = useState([]);
-    const [nodesByType, setNodesByType] = useState({});
+    const [valuesByType, setValuesByType] = useState({});
     const [taxonomy, setTaxonomy] = useState({type: "root", path: "/root", name: "Root", children: []});
 
     const addType = (newType) => {
         setTypes([...types, newType]);
     }
 
-    const addNode = (node, type) => {
-        const nodesByTypeCopy = {...nodesByType};
-        if(!nodesByTypeCopy[type]) {
-            nodesByTypeCopy[type] = [];
+    const addTypeValue = (value, type) => {
+        const valuesByTypeCopy = {...valuesByType};
+        if(!valuesByTypeCopy[type]) {
+            valuesByTypeCopy[type] = [];
         }
-        nodesByTypeCopy[type].push(node);
-        setNodesByType(nodesByTypeCopy);
+        valuesByTypeCopy[type].push(value);
+        setValuesByType(valuesByTypeCopy);
     }
 
     const addNodeToTaxonomy = (node) => {
@@ -36,7 +36,7 @@ function App() {
 
     const actions = {
         setTypes,
-        setNodesByType,
+        setValuesByType,
         setTaxonomy
     }
 
@@ -48,9 +48,9 @@ function App() {
                 <hr/>
                 <TypeManagement types={types} addType={addType} />
                 <hr />
-                <AddTaxonomyNode types={types} addNode={addNode} />
+                <AddTypeValue types={types} addTypeValue={addTypeValue} />
                 <hr />
-                <CreateTaxonomyNode nodesByType={nodesByType} addNodeToTaxonomy={addNodeToTaxonomy} />
+                <CreateTaxonomyNode valuesByType={valuesByType} addNodeToTaxonomy={addNodeToTaxonomy} />
                 <hr />
                 <DisplayTaxonomy taxonomy={taxonomy} />
             </div>

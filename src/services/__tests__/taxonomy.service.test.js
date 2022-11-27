@@ -280,7 +280,7 @@ describe("taxonomy.service", () => {
         })
     })
 
-    describe("getNodesByTypeFromTaxonomy", () => {
+    describe("getValuesByTypeFromTaxonomy", () => {
         it("should split taxonomy nodes by types", () => {
             const taxonomy = {
                 type: "root",
@@ -316,17 +316,17 @@ describe("taxonomy.service", () => {
                 ]
             };
 
-            const nodesByType = taxonomyService.getNodesByTypeFromTaxonomy(taxonomy.children);
-            expect(nodesByType).toHaveProperty("dc");
-            expect(nodesByType).toHaveProperty("i");
-            expect(nodesByType).toHaveProperty("ac");
-            expect(nodesByType["dc"]).toHaveLength(1);
-            expect(nodesByType["dc"][0].name).toBe("kosice");
-            expect(nodesByType["i"]).toHaveLength(2);
-            expect(nodesByType["i"][0].name).toBe("media");
-            expect(nodesByType["i"][1].name).toBe("retail");
-            expect(nodesByType["ac"]).toHaveLength(1);
-            expect(nodesByType["ac"][0].name).toBe("matrix");
+            const valuesByType = taxonomyService.getValuesByTypeFromTaxonomy(taxonomy.children);
+            expect(valuesByType).toHaveProperty("dc");
+            expect(valuesByType).toHaveProperty("i");
+            expect(valuesByType).toHaveProperty("ac");
+            expect(valuesByType["dc"]).toHaveLength(1);
+            expect(valuesByType["dc"][0].name).toBe("kosice");
+            expect(valuesByType["i"]).toHaveLength(2);
+            expect(valuesByType["i"][0].name).toBe("media");
+            expect(valuesByType["i"][1].name).toBe("retail");
+            expect(valuesByType["ac"]).toHaveLength(1);
+            expect(valuesByType["ac"][0].name).toBe("matrix");
         })
     })
 });

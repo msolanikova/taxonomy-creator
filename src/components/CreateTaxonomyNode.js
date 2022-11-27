@@ -1,36 +1,40 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {InputLabel, MenuItem, Select} from "@mui/material";
 import Button from "@mui/material/Button";
 
-const CreateTaxonomyNode = ({nodesByType, addNodeToTaxonomy}) => {
+const CreateTaxonomyNode = ({valuesByType, addNodeToTaxonomy}) => {
     const [taxoNode, setTaxoNode] = useState({});
 
-    useEffect(() => {
-    }, [nodesByType]);
-
-    const renderItems = (nodes) => {
-        const items = nodes.map(node => (
-            <MenuItem key={node.name} value={node.name}>{node.name}</MenuItem>
+    const renderItemsForType = (nodes, type) => {
+        const nodesCopy = [{name: ""}, ...nodes];
+        const items = nodesCopy.map(node => (
+            // <MenuItem key={node.name} value={node.name}>{node.name}</MenuItem>
+            <option key={node.name ? node.name : `${type}-null`} value={node.name}>{node.name}</option>
         ));
         return items;
     }
 
     const handleSelect = (type, value) => {
         const taxoNodeCopy = {...taxoNode};
-        taxoNodeCopy[type] = value;
+        if(value === "") {
+            delete taxoNodeCopy[type];
+        } else {
+            taxoNodeCopy[type] = value;
+        }
         setTaxoNode(taxoNodeCopy);
     }
 
-    const renderSelectsForTypes = (nodesByType) => {
-        return Object.keys(nodesByType).map(type => {
-            const nodes = nodesByType[type];
-            const items = renderItems(nodes);
+    const renderSelectsForTypes = (valuesByType) => {
+        return Object.keys(valuesByType).map(type => {
+            const nodes = valuesByType[type];
+            const items = renderItemsForType(nodes, type);
             return (
                 <div key={type}>
                     <InputLabel id="demo-simple-select-label">{type}</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
-                        id="demo-simple-select"
+                        id={type}
+                        native={true}
                         value={taxoNode[type] ?? ""}
                         label={type}
                         onChange={(ev) => handleSelect(type, ev.target.value)}
@@ -50,7 +54,7 @@ const CreateTaxonomyNode = ({nodesByType, addNodeToTaxonomy}) => {
     return (
         <div>
             <h2>Create Taxonomy Node</h2>
-            {renderSelectsForTypes(nodesByType)}
+            {renderSelectsForTypes(valuesByType)}
             <Button variant="contained" disabled={Object.keys(taxoNode).length === 0} onClick={addTaxoNode}>Add Taxonomy Node</Button>
         </div>
     );

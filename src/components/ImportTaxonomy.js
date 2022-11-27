@@ -11,7 +11,7 @@ const ImportTaxonomy = ({actions}) => {
             const taxonomy = JSON.parse(text);
             actions.setTaxonomy(taxonomy);
             actions.setTypes(taxonomyService.getTypesFromTaxonomy(taxonomy.children));
-            actions.setNodesByType(taxonomyService.getNodesByTypeFromTaxonomy(taxonomy.children));
+            actions.setValuesByType(taxonomyService.getValuesByTypeFromTaxonomy(taxonomy.children));
         };
         reader.readAsText(target.files[0]);
     }

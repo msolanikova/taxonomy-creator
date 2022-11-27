@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 
-function AddTaxonomyNode({types, addNode}) {
+function AddTypeValue({types, addTypeValue}) {
     const [newNodes, setNewNodes] = useState({});
 
     const changeNewNodes = (type, value) => {
@@ -12,7 +12,7 @@ function AddTaxonomyNode({types, addNode}) {
     }
 
     const handleClick = (type) => {
-        addNode({name: newNodes[type]}, type);
+        addTypeValue({name: newNodes[type], type}, type);
         changeNewNodes(type, "");
     }
 
@@ -36,7 +36,7 @@ function AddTaxonomyNode({types, addNode}) {
 
     return (
         <div>
-            <h2>Add node</h2>
+            <h2>Add Type Value</h2>
             {types.map(type => (
                 <div key={`addNode-${type}`}>
                     <TextField
@@ -56,4 +56,4 @@ function AddTaxonomyNode({types, addNode}) {
     );
 }
 
-export default AddTaxonomyNode;
+export default AddTypeValue;
