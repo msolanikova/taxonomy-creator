@@ -6,6 +6,7 @@ import CreateTaxonomyNode from "./components/CreateTaxonomyNode";
 import taxonomyService from "./services/taxonomy.service";
 import DisplayTaxonomy from "./components/DisplayTaxonomy";
 import ImportTaxonomy from "./components/ImportTaxonomy";
+import React from 'react';
 
 function App() {
     const [types, setTypes] = useState([]);
