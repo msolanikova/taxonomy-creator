@@ -46,9 +46,7 @@ function getValuesByTypeFromTaxonomy(taxonomyNodes, valuesByType = {}) {
         if(!valuesByType[node.type]) {
             valuesByType[node.type] = [];
         }
-        const nodeCopy = {...node};
-        delete nodeCopy.children;
-        valuesByType[node.type].push(nodeCopy);
+        valuesByType[node.type].push(node.name);
 
         valuesByType = getValuesByTypeFromTaxonomy(node.children, valuesByType);
     }
