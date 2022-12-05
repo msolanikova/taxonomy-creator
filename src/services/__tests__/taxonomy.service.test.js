@@ -321,12 +321,12 @@ describe("taxonomy.service", () => {
             expect(valuesByType).toHaveProperty("i");
             expect(valuesByType).toHaveProperty("ac");
             expect(valuesByType["dc"]).toHaveLength(1);
-            expect(valuesByType["dc"][0].name).toBe("kosice");
+            expect(valuesByType["dc"][0]).toBe("kosice");
             expect(valuesByType["i"]).toHaveLength(2);
-            expect(valuesByType["i"][0].name).toBe("media");
-            expect(valuesByType["i"][1].name).toBe("retail");
+            expect(valuesByType["i"][0]).toBe("media");
+            expect(valuesByType["i"][1]).toBe("retail");
             expect(valuesByType["ac"]).toHaveLength(1);
-            expect(valuesByType["ac"][0].name).toBe("matrix");
+            expect(valuesByType["ac"][0]).toBe("matrix");
         })
     })
 });
