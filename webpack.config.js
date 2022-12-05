@@ -30,4 +30,5 @@ module.exports = {
         compress: false,
         port: 3000,
     },
+    devtool: "eval-source-map"
 };
