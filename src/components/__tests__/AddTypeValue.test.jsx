@@ -5,15 +5,19 @@
 import {fireEvent, render, screen} from "@testing-library/react";
 import AddTypeValue from "../AddTypeValue";
 import React from 'react';
+import {Provider} from "react-redux";
+import configureMockStore from "redux-mock-store";
+
+const mockStore = configureMockStore();
 
 describe("AddTypeValue component", () => {
     it("should render textbox for each type correctly", () => {
-        const testProps = {
+        const state = {
             types: ["type1", "type2", "type3"],
-            addTypeValue: jest.fn()
+            valuesByType: {}
         }
-
-        const view = render(<AddTypeValue {...testProps} />);
+        const store = mockStore(state);
+        const view = render(<Provider store={store}><AddTypeValue/></Provider>);
 
         expect(screen.getAllByRole("textbox")).toHaveLength(3);
         expect(screen.getAllByRole("button")).toHaveLength(3);
@@ -21,31 +25,39 @@ describe("AddTypeValue component", () => {
     });
 
     it("should render no textbox if there is no type provided", () => {
-        const testProps = {
+        const state = {
             types: [],
-            addTypeValue: jest.fn()
+            valuesByType: {}
         }
 
-        const view = render(<AddTypeValue {...testProps} />);
+        const store = mockStore(state);
+        const view = render(<Provider store={store}><AddTypeValue/></Provider>);
 
         expect(screen.queryAllByRole("textbox")).toHaveLength(0);
         expect(screen.queryAllByRole("button")).toHaveLength(0);
         expect(view).toMatchSnapshot();
     });
 
-    it("should add new type value on hitting 'Add Type' button", async () => {
-        const addTypeValueMock = jest.fn();
-        const testProps = {
+    it("should dispatch CHANGE_TYPE_VALUES on hitting 'Add Type' button", async () => {
+        const state = {
             types: ["type1", "type2", "type3"],
-            addTypeValue: addTypeValueMock
+            valuesByType: {}
         }
 
-        render(<AddTypeValue {...testProps} />);
-        fireEvent.change(screen.queryAllByRole("textbox")[1], { target: { value: 'typevalue2' } })
+        const store = mockStore(state);
+        render(<Provider store={store}><AddTypeValue/></Provider>);
+
+        fireEvent.change(screen.queryAllByRole("textbox")[1], {target: {value: 'typevalue2'}})
         fireEvent.click(screen.queryAllByRole("button")[1]);
 
-        expect(addTypeValueMock).toHaveBeenCalledTimes(1);
-        expect(addTypeValueMock.mock.calls[0][0]).toEqual("typevalue2");
-        expect(addTypeValueMock.mock.calls[0][1]).toBe("type2");
+        expect(store.getActions()).toHaveLength(1);
+        expect(store.getActions()[0].type).toBeDefined();
+        expect(store.getActions()[0].type).toEqual("CHANGE_TYPE_VALUES");
+        expect(store.getActions()[0].data).toBeDefined();
+        expect(store.getActions()[0].data).toEqual({
+            valuesByType: {
+                "type2": ["typevalue2"]
+            }
+        });
     });
 });

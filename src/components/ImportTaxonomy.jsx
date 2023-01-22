@@ -1,17 +1,43 @@
 import React, {useEffect} from 'react';
 import Button from "@mui/material/Button";
 import taxonomyService from "../services/taxonomy.service";
+import {connect} from "react-redux";
 
-const ImportTaxonomy = ({actions}) => {
+const ImportTaxonomy = ({dispatch}) => {
+
+    const setTypes = (newTypes) => {
+        dispatch({
+            type: "CHANGE_TYPES", data: {
+                types: [...newTypes]
+            }
+        });
+    }
+
+    const setValuesByType = (newValuesByType) => {
+        dispatch({
+            type: "CHANGE_TYPE_VALUES", data: {
+                valuesByType: {...newValuesByType}
+            }
+        });
+    }
+
+    const setTaxonomy = (taxonomy) => {
+        const newTaxonomy = JSON.parse(JSON.stringify(taxonomy));
+        dispatch({
+            type: "CHANGE_TAXONOMY", data: {
+                taxonomy: newTaxonomy
+            }
+        });
+    }
 
     const importTaxonomy = ({target}) => {
         const reader = new FileReader();
-        reader.onload = function() {
+        reader.onload = function () {
             const text = reader.result;
             const taxonomy = JSON.parse(text);
-            actions.setTaxonomy(taxonomy);
-            actions.setTypes(taxonomyService.getTypesFromTaxonomy(taxonomy.children));
-            actions.setValuesByType(taxonomyService.getValuesByTypeFromTaxonomy(taxonomy.children));
+            setTaxonomy(taxonomy);
+            setTypes(taxonomyService.getTypesFromTaxonomy(taxonomy.children));
+            setValuesByType(taxonomyService.getValuesByTypeFromTaxonomy(taxonomy.children));
         };
         reader.readAsText(target.files[0]);
     }
@@ -23,7 +49,7 @@ const ImportTaxonomy = ({actions}) => {
         <div>
             <input
                 accept="application/json"
-                style={{ display: 'none' }}
+                style={{display: 'none'}}
                 id="raised-button-file"
                 onChange={importTaxonomy}
                 type="file"
@@ -38,4 +64,6 @@ const ImportTaxonomy = ({actions}) => {
     );
 };
 
-export default ImportTaxonomy;
+export default connect((state, props) => {
+    return {}
+})(ImportTaxonomy);

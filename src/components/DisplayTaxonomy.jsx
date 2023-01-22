@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {TreeItem, TreeView} from "@mui/lab";
 import {ChevronRight, ExpandMore} from "@mui/icons-material";
 import taxonomyService from "../services/taxonomy.service";
+import {connect} from "react-redux";
 
 const DisplayTaxonomy = ({taxonomy}) => {
     const [expanded, setExpanded] = useState([]);
@@ -27,8 +28,8 @@ const DisplayTaxonomy = ({taxonomy}) => {
     useEffect(() => {
         const paths = taxonomyService.getAllPaths([taxonomy]);
         setExpanded(paths);
+        console.log(taxonomy);
     }, [taxonomy]);
-
 
     return (
         <div>
@@ -46,4 +47,9 @@ const DisplayTaxonomy = ({taxonomy}) => {
     );
 };
 
-export default DisplayTaxonomy;
+// export default DisplayTaxonomy;
+export default connect((state, props) => {
+    return {
+        taxonomy: state.taxonomy,
+    }
+})(DisplayTaxonomy);

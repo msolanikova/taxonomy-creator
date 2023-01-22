@@ -1,9 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {TextField} from "@mui/material";
 import Button from "@mui/material/Button";
+import {connect} from "react-redux";
 
-function AddTypeValue({types, addTypeValue}) {
+function AddTypeValue({types, valuesByType, dispatch}) {
     const [newNodes, setNewNodes] = useState({});
+
+    const addTypeValue = (value, type) => {
+        const valuesByTypeCopy = {...valuesByType};
+        if (!valuesByTypeCopy[type]) {
+            valuesByTypeCopy[type] = [];
+        }
+        valuesByTypeCopy[type].push(value);
+        dispatch({
+            type: "CHANGE_TYPE_VALUES", data: {
+                valuesByType: valuesByTypeCopy
+            }
+        })
+    }
 
     const changeNewNodes = (type, value) => {
         const newNodesCopy = {...newNodes};
@@ -45,7 +59,7 @@ function AddTypeValue({types, addTypeValue}) {
                         key={`text-${type}`}
                         value={newNodes[type] ?? ""}
                         onChange={(ev) => handleTextInput(type, ev.target.value)}
-                        onKeyDown={(ev) => handleEnter(ev, type)} />
+                        onKeyDown={(ev) => handleEnter(ev, type)}/>
                     <Button
                         variant="contained"
                         key={`button-${type}`}
@@ -56,4 +70,10 @@ function AddTypeValue({types, addTypeValue}) {
     );
 }
 
-export default AddTypeValue;
+// export default AddTypeValue;
+export default connect((state, props) => {
+    return {
+        types: state.types,
+        valuesByType: state.valuesByType
+    }
+})(AddTypeValue);

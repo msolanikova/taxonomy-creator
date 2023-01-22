@@ -5,15 +5,23 @@
 import {fireEvent, render, screen, within} from "@testing-library/react";
 import CreateTaxonomyNode from "../CreateTaxonomyNode";
 import React from 'react';
+import {Provider} from "react-redux";
+import configureMockStore from "redux-mock-store";
+import taxonomyServiceMock from "../../services/taxonomy.service";
+
+const mockStore = configureMockStore();
+taxonomyServiceMock.addNodeToTaxonomy = jest.fn();
 
 describe("CreateTaxonomyNode component", () => {
     it("should render selects for each type correctly", () => {
-        const testProps = {
+        const state = {
+            types: ["type1", "type2"],
             valuesByType: {"type1": ["value1","value2"], "type2": ["value3"]},
-            addNodeToTaxonomy: jest.fn()
+            taxonomy: {type: "root", path: "/root", name: "Root", children: []}
         }
 
-        const view = render(<CreateTaxonomyNode {...testProps} />);
+        const store = mockStore(state);
+        const view = render(<Provider store={store}><CreateTaxonomyNode/></Provider>);
 
         const allSelects = screen.getAllByRole("combobox");
         expect(allSelects).toHaveLength(2);
@@ -29,12 +37,14 @@ describe("CreateTaxonomyNode component", () => {
     });
 
     it("should render no selects if there is no type provided", () => {
-        const testProps = {
+        const state = {
+            types: [],
             valuesByType: {},
-            addNodeToTaxonomy: jest.fn()
+            taxonomy: {type: "root", path: "/root", name: "Root", children: []}
         }
 
-        const view = render(<CreateTaxonomyNode {...testProps} />);
+        const store = mockStore(state);
+        const view = render(<Provider store={store}><CreateTaxonomyNode/></Provider>);
 
         expect(screen.queryAllByRole("combobox")).toHaveLength(0);
         expect(screen.queryAllByRole("button")).toHaveLength(1);
@@ -42,18 +52,23 @@ describe("CreateTaxonomyNode component", () => {
     });
 
     it("should add new node to taxonomy on hitting 'Create Taxonomy Node' button", async () => {
-        const addNodeToTaxonomyMock = jest.fn();
-        const testProps = {
+        const state = {
+            types: ["type1", "type2"],
             valuesByType: {"type1": ["value1","value2"], "type2": ["value3"]},
-            addNodeToTaxonomy: addNodeToTaxonomyMock
+            taxonomy: {type: "root", path: "/root", name: "Root", children: []}
         }
 
-        render(<CreateTaxonomyNode {...testProps} />);
+        const store = mockStore(state);
+        render(<Provider store={store}><CreateTaxonomyNode/></Provider>);
+
         fireEvent.change(screen.queryAllByRole("combobox")[0], { target: { value: "value2" } })
         fireEvent.change(screen.queryAllByRole("combobox")[1], { target: { value: "value3" } })
         fireEvent.click(screen.getByRole("button"));
 
-        expect(addNodeToTaxonomyMock).toHaveBeenCalledTimes(1);
-        expect(addNodeToTaxonomyMock.mock.calls[0][0]).toEqual({"type1": "value2", "type2": "value3"});
+        expect(store.getActions()).toHaveLength(1);
+        expect(store.getActions()[0].type).toBeDefined();
+        expect(store.getActions()[0].type).toBe("CHANGE_TAXONOMY");
+        expect(taxonomyServiceMock.addNodeToTaxonomy).toHaveBeenCalledTimes(1);
+        expect(taxonomyServiceMock.addNodeToTaxonomy.mock.calls[0][0]).toEqual({"type1": "value2", "type2": "value3"});
     });
 });

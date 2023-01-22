@@ -1,9 +1,18 @@
 import React, {useState} from 'react';
 import {List, ListItem, ListItemText, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
+import {connect} from "react-redux";
 
-const TypeManagement = ({types, addType}) => {
+const TypeManagement = ({types, dispatch}) => {
     const [newType, setNewType] = useState("");
+
+    const addType = (newType) => {
+        dispatch({
+            type: "CHANGE_TYPES", data: {
+                types: [...types, newType]
+            }
+        });
+    }
 
     const addNewType = () => {
         addType(newType);
@@ -25,13 +34,13 @@ const TypeManagement = ({types, addType}) => {
 
     return (
         <div>
-            <TextField variant="outlined" label="Type" id="type" value={newType} onChange={handleTextInput} onKeyDown={handleEnter} />
+            <TextField variant="outlined" label="Type" id="type" value={newType} onChange={handleTextInput} onKeyDown={handleEnter}/>
             <Button variant="contained" onClick={handleClick}>Add type</Button>
             <h2>Types</h2>
             <List dense={true}>
                 {types.map((type, index) => (
                     <ListItem key={`listItem-${type}`}>
-                        <ListItemText key={`listItemText-${type}`} primary={`${index+1}. ${type}`}/>
+                        <ListItemText key={`listItemText-${type}`} primary={`${index + 1}. ${type}`}/>
                     </ListItem>
                 ))}
             </List>
@@ -39,4 +48,9 @@ const TypeManagement = ({types, addType}) => {
     );
 };
 
-export default TypeManagement;
+// export default TypeManagement;
+export default connect((state, props) => {
+    return {
+        types: state.types,
+    }
+})(TypeManagement);
