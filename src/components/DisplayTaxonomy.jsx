@@ -4,7 +4,7 @@ import {ChevronRight, ExpandMore} from "@mui/icons-material";
 import taxonomyService from "../services/taxonomy.service";
 import {connect} from "react-redux";
 
-const DisplayTaxonomy = ({taxonomy}) => {
+const DisplayTaxonomy = ({taxonomy, fakeData}) => {
     const [expanded, setExpanded] = useState([]);
 
     const renderTaxonomy = (tax) => {
@@ -42,6 +42,7 @@ const DisplayTaxonomy = ({taxonomy}) => {
                 {renderTaxonomy(taxonomy)}
             </TreeView>
             <pre>{JSON.stringify(taxonomy, null, 2)}</pre>
+            <pre>{JSON.stringify(fakeData, null, 2)}</pre>
         </div>
     );
 };
@@ -50,5 +51,6 @@ const DisplayTaxonomy = ({taxonomy}) => {
 export default connect((state, props) => {
     return {
         taxonomy: state.taxonomy,
+        fakeData: state.fakeData
     }
 })(DisplayTaxonomy);

@@ -2,9 +2,33 @@ import React, {useEffect, useState} from 'react';
 import {TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import {connect} from "react-redux";
+import axios from "axios";
+
+axios.defaults.timeout = 10000;
 
 function AddTypeValue({types, valuesByType, dispatch}) {
     const [newNodes, setNewNodes] = useState({});
+
+    const fetchFakeApi = (id) => {
+        return async function fetchFakeApiThunk(dispatch, getState) {
+            try {
+                const response = await axios.get(`http://localhost:8000/fake-api`, {
+                    params: {
+                        id: id
+                    }
+                });
+                dispatch({
+                    type: "FAKE_API_SUCCESSFUL",
+                    data: response.data
+                });
+            } catch(err) {
+                dispatch({
+                    type: "FAKE_API_FAILED",
+                    data: err
+                })
+            }
+        }
+    }
 
     const addTypeValue = (value, type) => {
         const valuesByTypeCopy = {...valuesByType};
@@ -12,6 +36,7 @@ function AddTypeValue({types, valuesByType, dispatch}) {
             valuesByTypeCopy[type] = [];
         }
         valuesByTypeCopy[type].push(value);
+        dispatch(fetchFakeApi(`${type}-${value}`));
         dispatch({
             type: "CHANGE_TYPE_VALUES", data: {
                 valuesByType: valuesByTypeCopy
