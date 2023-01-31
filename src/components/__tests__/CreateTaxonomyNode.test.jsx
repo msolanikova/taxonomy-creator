@@ -8,14 +8,17 @@ import React from 'react';
 import {Provider} from "react-redux";
 import configureMockStore from "redux-mock-store";
 import taxonomyServiceMock from "../../services/taxonomy.service";
+import thunk from 'redux-thunk'
 
-const mockStore = configureMockStore();
+const middlewares = [thunk]
+const mockStore = configureMockStore(middlewares);
+
 taxonomyServiceMock.addNodeToTaxonomy = jest.fn();
 
 describe("CreateTaxonomyNode component", () => {
     it("should render selects for each type correctly", () => {
         const state = {
-            types: ["type1", "type2"],
+            types: {types: ["type1", "type2"]},
             valuesByType: {"type1": ["value1","value2"], "type2": ["value3"]},
             taxonomy: {type: "root", path: "/root", name: "Root", children: []}
         }
@@ -38,7 +41,7 @@ describe("CreateTaxonomyNode component", () => {
 
     it("should render no selects if there is no type provided", () => {
         const state = {
-            types: [],
+            types: {types: []},
             valuesByType: {},
             taxonomy: {type: "root", path: "/root", name: "Root", children: []}
         }
@@ -53,7 +56,7 @@ describe("CreateTaxonomyNode component", () => {
 
     it("should add new node to taxonomy on hitting 'Create Taxonomy Node' button", async () => {
         const state = {
-            types: ["type1", "type2"],
+            types: {types: ["type1", "type2"]},
             valuesByType: {"type1": ["value1","value2"], "type2": ["value3"]},
             taxonomy: {type: "root", path: "/root", name: "Root", children: []}
         }

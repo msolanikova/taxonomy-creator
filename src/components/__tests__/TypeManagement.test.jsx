@@ -7,14 +7,15 @@ import {fireEvent, render, screen} from "@testing-library/react";
 import React from 'react';
 import {Provider} from "react-redux";
 import configureMockStore from "redux-mock-store";
-import CreateTaxonomyNode from "../CreateTaxonomyNode";
+import thunk from 'redux-thunk'
 
-const mockStore = configureMockStore();
+const middlewares = [thunk]
+const mockStore = configureMockStore(middlewares);
 
 describe('TypeManagement component', () => {
     it("should list all types provided in properties correctly", () => {
         const state = {
-            types: ["type1", "type2", "type3"],
+            types: {types: ["type1", "type2", "type3"]},
         }
 
         const store = mockStore(state);
@@ -27,7 +28,7 @@ describe('TypeManagement component', () => {
 
     it("should list no types if none is provided in properties", () => {
         const state = {
-            types: [],
+            types: {types: []},
         }
 
         const store = mockStore(state);
@@ -40,7 +41,7 @@ describe('TypeManagement component', () => {
 
     it("should add new type on hitting 'Add Type' button", async () => {
         const state = {
-            types: ["type2", "type3"],
+            types: {types: ["type2", "type3"]},
         }
 
         const store = mockStore(state);

@@ -7,13 +7,15 @@ import AddTypeValue from "../AddTypeValue";
 import React from 'react';
 import {Provider} from "react-redux";
 import configureMockStore from "redux-mock-store";
+import thunk from 'redux-thunk'
 
-const mockStore = configureMockStore();
+const middlewares = [thunk]
+const mockStore = configureMockStore(middlewares);
 
 describe("AddTypeValue component", () => {
     it("should render textbox for each type correctly", () => {
         const state = {
-            types: ["type1", "type2", "type3"],
+            types: {types: ["type1", "type2", "type3"]},
             valuesByType: {}
         }
         const store = mockStore(state);
@@ -26,7 +28,7 @@ describe("AddTypeValue component", () => {
 
     it("should render no textbox if there is no type provided", () => {
         const state = {
-            types: [],
+            types: {types: []},
             valuesByType: {}
         }
 
@@ -40,7 +42,7 @@ describe("AddTypeValue component", () => {
 
     it("should dispatch CHANGE_TYPE_VALUES on hitting 'Add Type' button", async () => {
         const state = {
-            types: ["type1", "type2", "type3"],
+            types: {types: ["type1", "type2", "type3"]},
             valuesByType: {}
         }
 
