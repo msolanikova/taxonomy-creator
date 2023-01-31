@@ -73,7 +73,7 @@ const CreateTaxonomyNode = ({types, valuesByType, taxonomy, dispatch}) => {
 // export default CreateTaxonomyNode;
 export default connect((state, props) => {
     return {
-        types: state.types,
+        types: state.types.types,
         valuesByType: state.valuesByType,
         taxonomy: state.taxonomy
     }

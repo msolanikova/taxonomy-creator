@@ -1,42 +1,12 @@
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+import appReducer from "../reducers/root";
+import {createLogger} from "redux-logger";
 
-const defaultState = {
-    types: [],
-    valuesByType: {},
-    taxonomy: {type: "root", path: "/root", name: "Root", children: []}
-}
+const logger = createLogger({
+    collapsed: true
+});
 
-function reducer(state = defaultState, action) {
-    if(action.type === "CHANGE_TYPES") {
-        const newState = {
-            ...state,
-            types: action.data.types,
-        }
-        console.log("new state", newState);
-        return newState;
-    }
-
-    if(action.type === "CHANGE_TYPE_VALUES") {
-        const newState = {
-            ...state,
-            valuesByType: action.data.valuesByType,
-        }
-        console.log("new state", newState);
-        return newState;
-    }
-
-    if(action.type === "CHANGE_TAXONOMY") {
-        const newState = {
-            ...state,
-            taxonomy: action.data.taxonomy,
-        }
-        console.log("new state", newState);
-        return newState;
-    }
-
-    return state;
-}
-
-const store = createStore(reducer);
+const store = createStore(appReducer, applyMiddleware(thunk, logger));
 
 export default store;

@@ -28,7 +28,6 @@ const DisplayTaxonomy = ({taxonomy}) => {
     useEffect(() => {
         const paths = taxonomyService.getAllPaths([taxonomy]);
         setExpanded(paths);
-        console.log(taxonomy);
     }, [taxonomy]);
 
     return (

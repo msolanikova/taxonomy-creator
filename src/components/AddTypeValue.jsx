@@ -73,7 +73,7 @@ function AddTypeValue({types, valuesByType, dispatch}) {
 // export default AddTypeValue;
 export default connect((state, props) => {
     return {
-        types: state.types,
+        types: state.types.types,
         valuesByType: state.valuesByType
     }
 })(AddTypeValue);

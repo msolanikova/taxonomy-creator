@@ -51,6 +51,6 @@ const TypeManagement = ({types, dispatch}) => {
 // export default TypeManagement;
 export default connect((state, props) => {
     return {
-        types: state.types,
+        types: state.types.types,
     }
 })(TypeManagement);
