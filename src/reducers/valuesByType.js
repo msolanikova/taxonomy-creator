@@ -1,13 +1,23 @@
-const defaultState = {};
+import {createSlice} from "@reduxjs/toolkit";
 
-export default function valuesByTypeReducer(state = defaultState, action) {
-    if(action.type === "CHANGE_TYPE_VALUES") {
-        const newState = {
-            ...state,
-            ...action.data.valuesByType,
+const initialState = {};
+
+export const valuesByTypeReducer = createSlice({
+    name: "valuesByType",
+    initialState,
+    reducers: {
+        addValueToType: (state, action) => {
+            if (!state[action.payload.type]) {
+                state[action.payload.type] = [];
+            }
+            state[action.payload.type].push(action.payload.value);
+        },
+        setValuesByType: (state, action) => {
+            return action.payload;
         }
-        return newState;
     }
+});
 
-    return state;
-}
+export const {addValueToType, setValuesByType} = valuesByTypeReducer.actions;
+
+export default valuesByTypeReducer.reducer;

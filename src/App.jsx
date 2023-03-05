@@ -1,10 +1,11 @@
 import './App.css';
-import TypeManagement from "./components/TypeManagement";
+
 import AddTypeValue from "./components/AddTypeValue";
 import CreateTaxonomyNode from "./components/CreateTaxonomyNode";
 import DisplayTaxonomy from "./components/DisplayTaxonomy";
 import ImportTaxonomy from "./components/ImportTaxonomy";
 import React from 'react';
+import TypeManagement from "./components/TypeManagement";
 
 function App() {
     return (

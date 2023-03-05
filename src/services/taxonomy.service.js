@@ -1,17 +1,15 @@
-function addNodeToTaxonomy(node, taxonomy, types) {
-    const taxoCopy = {...taxonomy}
-
-    let path = _createNodePath(node, types);
-    let taxoMap = _createMapFromTaxonomy(taxoCopy);
+function addNodeToTaxonomy(taxonomy, node, allTypes) {
+    let path = _createNodePath(node, allTypes);
+    let taxoMap = _createMapFromTaxonomy(taxonomy);
     if(!_pathExists(path, taxoMap)) {
         const pathParts = path.split("/");
-        for(let i = 0; i < types.length; i++) {
+        for(let i = 0; i < allTypes.length; i++) {
             const partialPath = pathParts.slice(0, i+3).join("/");
             if(!_pathExists(partialPath, taxoMap)) {
                 const newNode = {
                     path: partialPath,
-                    type: types[i],
-                    name: node[types[i]],
+                    type: allTypes[i],
+                    name: node[allTypes[i]],
                     children: [],
                 }
                 _createPath(newNode, partialPath, taxoMap);
@@ -19,7 +17,7 @@ function addNodeToTaxonomy(node, taxonomy, types) {
             }
         }
     }
-    return taxoCopy;
+    return taxonomy;
 }
 
 function getAllPaths(nodes, pathList = []) {

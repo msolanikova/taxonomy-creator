@@ -1,15 +1,20 @@
-const defaultState = {
-    types: []
-};
+import {createSlice} from "@reduxjs/toolkit";
 
-export default function typesReducer(state = defaultState, action) {
-    if(action.type === "CHANGE_TYPES") {
-        const newState = {
-            ...state,
-            types: action.data.types,
+const initialState = [];
+
+export const typesReducer = createSlice({
+    name: "types",
+    initialState,
+    reducers: {
+        addType: (state, action) => {
+            state.push(action.payload);
+        },
+        setTypes: (state, action) => {
+            return action.payload;
         }
-        return newState;
     }
+});
 
-    return state;
-}
+export const {addType, setTypes} = typesReducer.actions;
+
+export default typesReducer.reducer;

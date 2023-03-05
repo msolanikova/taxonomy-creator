@@ -1,27 +1,24 @@
 import React, {useState} from 'react';
 import {InputLabel, Select} from "@mui/material";
 import Button from "@mui/material/Button";
-import {connect} from "react-redux";
-import taxonomyService from "../services/taxonomy.service";
+import {useDispatch, useSelector} from "react-redux";
+import {addNodeToTaxonomy as addNodeToTaxonomyInState} from "../reducers/taxonomy";
 
-const CreateTaxonomyNode = ({types, valuesByType, taxonomy, dispatch}) => {
+export default function CreateTaxonomyNode() {
+    const valuesByType = useSelector((state) => state.valuesByType);
+    const types = useSelector((state) => state.types);
+    const dispatch = useDispatch();
     const [taxoNode, setTaxoNode] = useState({});
 
     const addNodeToTaxonomy = (node) => {
-        const taxoCopy = taxonomyService.addNodeToTaxonomy(node, taxonomy, types);
-        dispatch({
-            type: "CHANGE_TAXONOMY", data: {
-                taxonomy: taxoCopy
-            }
-        });
+        dispatch(addNodeToTaxonomyInState({node, types}));
     }
 
     const renderItemsForType = (values, type) => {
         const valuesCopy = ["", ...values];
-        const items = valuesCopy.map(value => (
+        return valuesCopy.map(value => (
             <option key={value ? value : `${type}-null`} value={value}>{value}</option>
         ));
-        return items;
     }
 
     const handleSelect = (type, value) => {
@@ -69,12 +66,3 @@ const CreateTaxonomyNode = ({types, valuesByType, taxonomy, dispatch}) => {
         </div>
     );
 };
-
-// export default CreateTaxonomyNode;
-export default connect((state, props) => {
-    return {
-        types: state.types.types,
-        valuesByType: state.valuesByType,
-        taxonomy: state.taxonomy
-    }
-})(CreateTaxonomyNode);

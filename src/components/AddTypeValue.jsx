@@ -1,15 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {TextField} from "@mui/material";
 import Button from "@mui/material/Button";
-import {connect} from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 import axios from "axios";
+import {addValueToType} from "../reducers/valuesByType";
 
 axios.defaults.timeout = 10000;
 
-function AddTypeValue({types, valuesByType, dispatch}) {
+export default function AddTypeValue() {
+    const types = useSelector((state) => state.types);
+    const dispatch = useDispatch();
     const [newNodes, setNewNodes] = useState({});
 
-    const fetchFakeApi = (id) => {
+   /* const fetchFakeApi = (id) => {
         return async function fetchFakeApiThunk(dispatch, getState) {
             try {
                 const response = await axios.get(`http://localhost:8000/fake-api`, {
@@ -28,20 +31,11 @@ function AddTypeValue({types, valuesByType, dispatch}) {
                 })
             }
         }
-    }
+    }*/
 
     const addTypeValue = (value, type) => {
-        const valuesByTypeCopy = {...valuesByType};
-        if (!valuesByTypeCopy[type]) {
-            valuesByTypeCopy[type] = [];
-        }
-        valuesByTypeCopy[type].push(value);
-        dispatch(fetchFakeApi(`${type}-${value}`));
-        dispatch({
-            type: "CHANGE_TYPE_VALUES", data: {
-                valuesByType: valuesByTypeCopy
-            }
-        })
+        // dispatch(fetchFakeApi(`${type}-${value}`));
+        dispatch(addValueToType({value, type}));
     }
 
     const changeNewNodes = (type, value) => {
@@ -94,11 +88,3 @@ function AddTypeValue({types, valuesByType, dispatch}) {
         </div>
     );
 }
-
-// export default AddTypeValue;
-export default connect((state, props) => {
-    return {
-        types: state.types.types,
-        valuesByType: state.valuesByType
-    }
-})(AddTypeValue);

@@ -1,33 +1,25 @@
 import React, {useEffect} from 'react';
 import Button from "@mui/material/Button";
 import taxonomyService from "../services/taxonomy.service";
-import {connect} from "react-redux";
+import {useDispatch} from "react-redux";
+import {setTypes as setTypesToState} from "../reducers/types";
+import {setValuesByType as setValuesByTypeToState} from "../reducers/valuesByType";
+import {setTaxonomy as setTaxonomyToState} from "../reducers/taxonomy";
 
-const ImportTaxonomy = ({dispatch}) => {
+export default function ImportTaxonomy() {
+    const dispatch = useDispatch();
 
     const setTypes = (newTypes) => {
-        dispatch({
-            type: "CHANGE_TYPES", data: {
-                types: [...newTypes]
-            }
-        });
+        dispatch(setTypesToState([...newTypes]));
     }
 
     const setValuesByType = (newValuesByType) => {
-        dispatch({
-            type: "CHANGE_TYPE_VALUES", data: {
-                valuesByType: {...newValuesByType}
-            }
-        });
+        dispatch(setValuesByTypeToState({...newValuesByType}));
     }
 
     const setTaxonomy = (taxonomy) => {
         const newTaxonomy = JSON.parse(JSON.stringify(taxonomy));
-        dispatch({
-            type: "CHANGE_TAXONOMY", data: {
-                taxonomy: newTaxonomy
-            }
-        });
+        dispatch(setTaxonomyToState(newTaxonomy));
     }
 
     const importTaxonomy = ({target}) => {
@@ -63,7 +55,3 @@ const ImportTaxonomy = ({dispatch}) => {
         </div>
     );
 };
-
-export default connect((state, props) => {
-    return {}
-})(ImportTaxonomy);

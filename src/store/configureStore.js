@@ -1,12 +1,20 @@
-import {createStore, applyMiddleware} from 'redux';
-import thunk from 'redux-thunk';
-import appReducer from "../reducers/root";
+import {configureStore} from "@reduxjs/toolkit";
+import {typesReducer} from "../reducers/types";
+import {valuesByTypeReducer} from "../reducers/valuesByType";
+import {taxonomyReducer} from "../reducers/taxonomy";
 import {createLogger} from "redux-logger";
 
 const logger = createLogger({
     collapsed: true
 });
 
-const store = createStore(appReducer, applyMiddleware(thunk, logger));
+const store = configureStore({
+    reducer: {
+        types: typesReducer.reducer,
+        valuesByType: valuesByTypeReducer.reducer,
+        taxonomy: taxonomyReducer.reducer,
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+});
 
 export default store;

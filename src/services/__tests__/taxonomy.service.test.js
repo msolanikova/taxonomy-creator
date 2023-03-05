@@ -4,12 +4,12 @@ describe("taxonomy.service", () => {
 
     describe("addNodeToTaxonomy", () => {
         it("should add new node and its parents to empty taxonomy", () => {
-            const taxonomy = taxonomyService.addNodeToTaxonomy({dc: "kosice", i: "retail", ac: "matrix"}, {
+            const taxonomy = taxonomyService.addNodeToTaxonomy({
                 type: "root",
                 path: "/root",
                 name: "Root",
                 children: []
-            }, ["dc", "i", "ac"]);
+            }, {dc: "kosice", i: "retail", ac: "matrix"}, ["dc", "i", "ac"]);
 
             expect(taxonomy).toMatchObject({
                 type: "root",
@@ -41,7 +41,7 @@ describe("taxonomy.service", () => {
         });
 
         it("should add new leaf node to existing taxonomy", () => {
-            const taxonomy = taxonomyService.addNodeToTaxonomy({dc: "kosice", i: "retail", ac: "matrix"}, {
+            const taxonomy = taxonomyService.addNodeToTaxonomy({
                 type: "root",
                 path: "/root",
                 name: "Root",
@@ -60,7 +60,7 @@ describe("taxonomy.service", () => {
                         ]
                     }
                 ]
-            }, ["dc", "i", "ac"]);
+            }, {dc: "kosice", i: "retail", ac: "matrix"},["dc", "i", "ac"]);
 
             expect(taxonomy).toMatchObject({
                 type: "root",
@@ -92,7 +92,7 @@ describe("taxonomy.service", () => {
         });
 
         it("should add new middle node to existing taxonomy when sibling node doesn't exist exists", () => {
-            const taxonomy = taxonomyService.addNodeToTaxonomy({dc: "kosice", i: "retail", ac: "matrix"}, {
+            const taxonomy = taxonomyService.addNodeToTaxonomy({
                 type: "root",
                 path: "/root",
                 name: "Root",
@@ -104,7 +104,7 @@ describe("taxonomy.service", () => {
                         children: []
                     }
                 ]
-            }, ["dc", "i", "ac"]);
+            }, {dc: "kosice", i: "retail", ac: "matrix"}, ["dc", "i", "ac"]);
 
             expect(taxonomy).toMatchObject({
                 type: "root",
@@ -135,7 +135,7 @@ describe("taxonomy.service", () => {
         });
 
         it("should add new middle node to existing taxonomy when sibling node exists", () => {
-            const taxonomy = taxonomyService.addNodeToTaxonomy({dc: "kosice", i: "retail", ac: "matrix"}, {
+            const taxonomy = taxonomyService.addNodeToTaxonomy({
                 type: "root",
                 path: "/root",
                 name: "Root",
@@ -154,7 +154,7 @@ describe("taxonomy.service", () => {
                         ]
                     }
                 ]
-            }, ["dc", "i", "ac"]);
+            }, {dc: "kosice", i: "retail", ac: "matrix"}, ["dc", "i", "ac"]);
 
             expect(taxonomy).toMatchObject({
                 type: "root",
@@ -328,6 +328,5 @@ describe("taxonomy.service", () => {
             expect(valuesByType["ac"]).toHaveLength(1);
             expect(valuesByType["ac"][0]).toBe("matrix");
         })
-    })
+    });
 });
-

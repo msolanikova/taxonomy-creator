@@ -1,17 +1,16 @@
 import React, {useState} from 'react';
 import {List, ListItem, ListItemText, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {addType as addTypeToState} from "../reducers/types";
 
-const TypeManagement = ({types, dispatch}) => {
+export default function TypeManagement() {
+    const types = useSelector((state) => state.types);
+    const dispatch = useDispatch();
     const [newType, setNewType] = useState("");
 
     const addType = (newType) => {
-        dispatch({
-            type: "CHANGE_TYPES", data: {
-                types: [...types, newType]
-            }
-        });
+        dispatch(addTypeToState(newType));
     }
 
     const addNewType = () => {
@@ -47,10 +46,3 @@ const TypeManagement = ({types, dispatch}) => {
         </div>
     );
 };
-
-// export default TypeManagement;
-export default connect((state, props) => {
-    return {
-        types: state.types.types,
-    }
-})(TypeManagement);

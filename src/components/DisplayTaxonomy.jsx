@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {TreeItem, TreeView} from "@mui/lab";
 import {ChevronRight, ExpandMore} from "@mui/icons-material";
 import taxonomyService from "../services/taxonomy.service";
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
 
-const DisplayTaxonomy = ({taxonomy, fakeData}) => {
+export default function DisplayTaxonomy() {
+    const taxonomy = useSelector((state) => state.taxonomy);
     const [expanded, setExpanded] = useState([]);
 
     const renderTaxonomy = (tax) => {
@@ -30,6 +31,10 @@ const DisplayTaxonomy = ({taxonomy, fakeData}) => {
         setExpanded(paths);
     }, [taxonomy]);
 
+    const handleToggle = (event, paths) => {
+        setExpanded(paths);
+    };
+
     return (
         <div>
             <TreeView
@@ -37,20 +42,13 @@ const DisplayTaxonomy = ({taxonomy, fakeData}) => {
                 defaultCollapseIcon={<ExpandMore/>}
                 defaultExpandIcon={<ChevronRight/>}
                 expanded={expanded}
+                onNodeToggle={handleToggle}
                 sx={{height: 500, flexGrow: 1, maxWidth: 800, overflowY: 'auto'}}
             >
                 {renderTaxonomy(taxonomy)}
             </TreeView>
             <pre>{JSON.stringify(taxonomy, null, 2)}</pre>
-            <pre>{JSON.stringify(fakeData, null, 2)}</pre>
+            {/*<pre>{JSON.stringify(fakeData, null, 2)}</pre>*/}
         </div>
     );
 };
-
-// export default DisplayTaxonomy;
-export default connect((state, props) => {
-    return {
-        taxonomy: state.taxonomy,
-        fakeData: state.fakeData
-    }
-})(DisplayTaxonomy);
