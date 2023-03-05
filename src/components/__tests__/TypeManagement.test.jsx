@@ -3,58 +3,47 @@
  */
 
 import TypeManagement from "../TypeManagement";
-import {fireEvent, render, screen} from "@testing-library/react";
+import {fireEvent, screen} from "@testing-library/react";
 import React from 'react';
-import {Provider} from "react-redux";
-import configureMockStore from "redux-mock-store";
-import thunk from 'redux-thunk'
-
-const middlewares = [thunk]
-const mockStore = configureMockStore(middlewares);
+import {renderWithProviders} from "./test-utils";
 
 describe('TypeManagement component', () => {
     it("should list all types provided in properties correctly", () => {
-        const state = {
-            types: {types: ["type1", "type2", "type3"]},
-        }
-
-        const store = mockStore(state);
-        const view = render(<Provider store={store}><TypeManagement/></Provider>);
+        const {container} = renderWithProviders(<TypeManagement/>, {
+            preloadedState: {
+                types: ["type1", "type2", "type3"]
+            }
+        });
 
         const listItems = screen.getAllByRole("listitem");
         expect(listItems).toHaveLength(3);
-        expect(view).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 
     it("should list no types if none is provided in properties", () => {
-        const state = {
-            types: {types: []},
-        }
-
-        const store = mockStore(state);
-        const view = render(<Provider store={store}><TypeManagement/></Provider>);
+        const {container} = renderWithProviders(<TypeManagement/>, {
+            preloadedState: {
+                types: []
+            }
+        });
 
         const listItems = screen.queryAllByRole("listitem");
         expect(listItems).toHaveLength(0);
-        expect(view).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 
     it("should add new type on hitting 'Add Type' button", async () => {
-        const state = {
-            types: {types: ["type2", "type3"]},
-        }
+        const {store} = renderWithProviders(<TypeManagement/>, {
+            preloadedState: {
+                types: ["type2", "type3"]
+            }
+        });
 
-        const store = mockStore(state);
-        const view = render(<Provider store={store}><TypeManagement/></Provider>);
         fireEvent.change(screen.getByRole("textbox"), { target: { value: 'type1' } })
         fireEvent.click(screen.getByRole("button"));
 
-        expect(store.getActions()).toHaveLength(1);
-        expect(store.getActions()[0].type).toBeDefined();
-        expect(store.getActions()[0].type).toBe("CHANGE_TYPES");
-        expect(store.getActions()[0].data).toBeDefined();
-        expect(store.getActions()[0].data).toEqual({
-            types: ["type2", "type3", "type1"]
-        });
+        const state = store.getState();
+        expect(state.types).toHaveLength(3);
+        expect(state.types).toEqual(["type2", "type3", "type1"]);
     });
 });

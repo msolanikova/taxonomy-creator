@@ -2,29 +2,23 @@
  * @jest-environment jsdom
  */
 
-import {fireEvent, render, screen, within} from "@testing-library/react";
+import {fireEvent, screen, within} from "@testing-library/react";
 import CreateTaxonomyNode from "../CreateTaxonomyNode";
 import React from 'react';
-import {Provider} from "react-redux";
-import configureMockStore from "redux-mock-store";
 import taxonomyServiceMock from "../../services/taxonomy.service";
-import thunk from 'redux-thunk'
-
-const middlewares = [thunk]
-const mockStore = configureMockStore(middlewares);
+import {renderWithProviders} from "./test-utils";
 
 taxonomyServiceMock.addNodeToTaxonomy = jest.fn();
 
 describe("CreateTaxonomyNode component", () => {
     it("should render selects for each type correctly", () => {
-        const state = {
-            types: {types: ["type1", "type2"]},
-            valuesByType: {"type1": ["value1","value2"], "type2": ["value3"]},
-            taxonomy: {type: "root", path: "/root", name: "Root", children: []}
-        }
-
-        const store = mockStore(state);
-        const view = render(<Provider store={store}><CreateTaxonomyNode/></Provider>);
+        const {container} = renderWithProviders(<CreateTaxonomyNode/>, {
+            preloadedState: {
+                types: ["type1", "type2"],
+                valuesByType: {"type1": ["value1", "value2"], "type2": ["value3"]},
+                taxonomy: {type: "root", path: "/root", name: "Root", children: []}
+            }
+        });
 
         const allSelects = screen.getAllByRole("combobox");
         expect(allSelects).toHaveLength(2);
@@ -36,42 +30,38 @@ describe("CreateTaxonomyNode component", () => {
         const type2Options = within(type2Select).getAllByRole('option');
         expect(type1Options).toHaveLength(3);
         expect(type2Options).toHaveLength(2);
-        expect(view).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 
     it("should render no selects if there is no type provided", () => {
-        const state = {
-            types: {types: []},
-            valuesByType: {},
-            taxonomy: {type: "root", path: "/root", name: "Root", children: []}
-        }
-
-        const store = mockStore(state);
-        const view = render(<Provider store={store}><CreateTaxonomyNode/></Provider>);
+        const {container} = renderWithProviders(<CreateTaxonomyNode/>, {
+            preloadedState: {
+                types: [],
+                valuesByType: {},
+                taxonomy: {type: "root", path: "/root", name: "Root", children: []}
+            }
+        });
 
         expect(screen.queryAllByRole("combobox")).toHaveLength(0);
         expect(screen.queryAllByRole("button")).toHaveLength(1);
-        expect(view).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 
     it("should add new node to taxonomy on hitting 'Create Taxonomy Node' button", async () => {
-        const state = {
-            types: {types: ["type1", "type2"]},
-            valuesByType: {"type1": ["value1","value2"], "type2": ["value3"]},
-            taxonomy: {type: "root", path: "/root", name: "Root", children: []}
-        }
+        renderWithProviders(<CreateTaxonomyNode/>, {
+            preloadedState: {
+                types: ["type1", "type2"],
+                valuesByType: {"type1": ["value1", "value2"], "type2": ["value3"]},
+                taxonomy: {type: "root", path: "/root", name: "Root", children: []}
+            }
+        });
 
-        const store = mockStore(state);
-        render(<Provider store={store}><CreateTaxonomyNode/></Provider>);
-
-        fireEvent.change(screen.queryAllByRole("combobox")[0], { target: { value: "value2" } })
-        fireEvent.change(screen.queryAllByRole("combobox")[1], { target: { value: "value3" } })
+        fireEvent.change(screen.queryAllByRole("combobox")[0], {target: {value: "value2"}})
+        fireEvent.change(screen.queryAllByRole("combobox")[1], {target: {value: "value3"}})
         fireEvent.click(screen.getByRole("button"));
 
-        expect(store.getActions()).toHaveLength(1);
-        expect(store.getActions()[0].type).toBeDefined();
-        expect(store.getActions()[0].type).toBe("CHANGE_TAXONOMY");
         expect(taxonomyServiceMock.addNodeToTaxonomy).toHaveBeenCalledTimes(1);
-        expect(taxonomyServiceMock.addNodeToTaxonomy.mock.calls[0][0]).toEqual({"type1": "value2", "type2": "value3"});
+        expect(taxonomyServiceMock.addNodeToTaxonomy.mock.calls[0][1]).toEqual({"type1": "value2", "type2": "value3"});
+        expect(taxonomyServiceMock.addNodeToTaxonomy.mock.calls[0][2]).toEqual(["type1", "type2"]);
     });
 });
