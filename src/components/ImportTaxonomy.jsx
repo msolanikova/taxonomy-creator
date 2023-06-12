@@ -48,7 +48,7 @@ export default function ImportTaxonomy() {
             />
             <label htmlFor="raised-button-file">
                 <Button variant="contained" component="span">
-                    Upload NEW
+                    Upload NEW NEW NEW
                 </Button>
             </label>
 
